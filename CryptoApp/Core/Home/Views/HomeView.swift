@@ -16,6 +16,13 @@ struct HomeView: View {
                 .ignoresSafeArea()
             VStack{
                 HomeHeader
+                
+                List{
+                    ForEach(0..<10){ coin in
+                        CoinRowView(coin: DeveloperPreview.instance.coin, showHoldingColumn:showPortfolio )
+                    }
+                 }
+                .listStyle(.plain)
                 Spacer(minLength: 0)
             }
         }
@@ -60,5 +67,4 @@ extension HomeView {
         HomeView()
             .navigationBarHidden(true)
     }
-  
 }
