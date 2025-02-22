@@ -21,46 +21,12 @@ class CoinDataService {
             return
         }
         
-        coinSubscribe = URLSession.shared.dataTaskPublisher(for: url)
-            .subscribe(on:DispatchQueue.global(qos: .default))
-            .tryMap { (output) -> Data in
-                guard let response = output.response as? HTTPURLResponse,
-                      200..<300 ~= response.statusCode else {
-                    throw URLError(.badServerResponse)
-                }
-                
-                // Convert data to a JSON string and print it
-                if let jsonString = String(data: output.data, encoding: .utf8) {
-                    print("Raw JSON Response: \(jsonString)")
-                }
-                
-                 return output.data
-            }
-            .receive(on: DispatchQueue.main)
-            
+        coinSubscribe =  NetworkingManager.download(url: url)
             .decode(type: [CoinModel].self, decoder: JSONDecoder())
-            .sink(receiveCompletion: { completion in
-               
-                switch completion {
-                case .finished:
-                    break
-                    
-            
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    print("Decoding Error: \(error.localizedDescription)")
-                    if let decodingError = error as? DecodingError {
-                        //self.debugDecodingError(decodingError)
-                        
-                        print(decodingError)
-                    }
-                }
-            
-            }, receiveValue: {[weak self] returnCoin in
+            .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] returnCoin in
                 self?.allCoins = returnCoin
                 self?.coinSubscribe?.cancel()
             })
-
     }
     
     func handleDecodingError(_ error: DecodingError) {

@@ -76,6 +76,7 @@ extension HomeView {
             }
          }
         .listStyle(.plain)
+         
     }
     
     private var portfolioCoinList :some View{

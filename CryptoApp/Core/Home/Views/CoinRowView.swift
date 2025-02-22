@@ -42,7 +42,6 @@ struct CoinRowView_Previews:PreviewProvider{
     }
 }
 
-
 extension CoinRowView{
     private var leftColumn :some View{
         HStack(spacing: 0){
@@ -51,12 +50,12 @@ extension CoinRowView{
                 .foregroundStyle(.secondaryText)
                 .frame(minWidth: 30)
             
-            Circle()
-                .frame(width: 30,height: 30)
-                .overlay {
-                    // image
-                }
             
+            
+            if let url = URL(string: coin.image ?? "") {
+                CoinImageView(url: url)
+            }
+    
             Text(coin.symbol.uppercased())
                 .font(.headline)
                 .padding(.leading,6)
