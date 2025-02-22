@@ -19,6 +19,13 @@ struct HomeView: View {
             VStack{
                 HomeHeader
                 
+                SearchBarView(searchText: $vm.searchText)
+                    
+                    .submitLabel(.search)
+                    .onSubmit {
+                        
+                    }
+                 
                 columnTitle
                 
                 if !showPortfolio {
