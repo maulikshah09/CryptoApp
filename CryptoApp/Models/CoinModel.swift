@@ -49,9 +49,7 @@ import Foundation
      "price_change_percentage_24h_in_currency": 1.37784689276901
    }
  */
-
  
-
 struct CoinModel: Identifiable,Codable {
     let id, symbol, name: String
     let image: String?

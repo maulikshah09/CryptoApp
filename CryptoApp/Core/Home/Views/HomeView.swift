@@ -12,6 +12,13 @@ struct HomeView: View {
     @EnvironmentObject private var vm : HomeViewModel
     @State private var showPortfolio  = false
     
+    let statistics : [StatisticModel] = [
+        StatisticModel(title: "title", value: "value", percentageChange: 1),
+        StatisticModel(title: "title", value: "value"),
+        StatisticModel(title: "title", value: "value"),
+        StatisticModel(title: "title", value: "value", percentageChange: -7),
+    ]
+    
     var body: some View {
         ZStack{
             Color.background
@@ -19,12 +26,14 @@ struct HomeView: View {
             VStack{
                 HomeHeader
                 
+                HomeStateView(showPortfolio: $showPortfolio)
+                
                 SearchBarView(searchText: $vm.searchText)
                     
                     .submitLabel(.search)
-                    .onSubmit {
-                        
-                    }
+//                    .onSubmit {
+//                        vm.myfilterCoins(text: vm.searchText)
+//                    }
                  
                 columnTitle
                 
@@ -45,6 +54,7 @@ struct HomeView: View {
 }
 
 extension HomeView {
+   
     private var HomeHeader : some View{
         HStack{
             CircleButtonView(iconName: showPortfolio ? "plus" : "info")
@@ -74,6 +84,8 @@ extension HomeView {
         }
         .padding(.horizontal)
     }
+    
+     
     
     private var allCoinList :some View{
         List{
