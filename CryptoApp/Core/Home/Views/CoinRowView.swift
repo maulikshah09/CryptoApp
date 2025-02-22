@@ -53,7 +53,7 @@ extension CoinRowView{
             
             
             if let url = URL(string: coin.image ?? "") {
-                CoinImageView(url: url)
+                CoinImageView(url: url, coinId: coin.id )
             }
     
             Text(coin.symbol.uppercased())
