@@ -22,7 +22,8 @@ class HomeViewModel : ObservableObject{
     @Published var searchText = ""
     
     private var cancellables = Set<AnyCancellable>()
-    private let dataService = CoinDataService()
+    private let coinDataService = CoinDataService()
+    private let marketDataService = MarketDataService()
     
     init() {
         addSubsribers()
@@ -41,12 +42,19 @@ class HomeViewModel : ObservableObject{
     
         // updates all coins
         $searchText
-            .combineLatest(dataService.$allCoins)
+            .combineLatest(coinDataService.$allCoins)
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .map(filterCoins)
             .sink {[weak self] coins in
                 self?.allCoins = coins
             }
+            .store(in: &cancellables)
+        
+        marketDataService.$marketData
+            .map(mapGlobalMarketData)
+            .sink(receiveValue: { [weak self] returnstat in
+                self?.statistics = returnstat
+            })
             .store(in: &cancellables)
     }
     
@@ -60,5 +68,25 @@ class HomeViewModel : ObservableObject{
             $0.name.lowercased().contains(lowerCasedSearchText) ||  $0.symbol.lowercased().contains(lowerCasedSearchText) ||
                 $0.id.lowercased().contains(lowerCasedSearchText)
         }
+    }
+    
+    private func mapGlobalMarketData(data : MarketDataModel?) -> [StatisticModel]{
+      
+        var stats : [StatisticModel] = []
+        guard let data = data else{ return stats }
+        
+        let marketCap = StatisticModel(title: "Market Cap", value: data.marketCap, percentageChange: data.marketCapChangePercentage24HUsd)
+        
+        let volume = StatisticModel(title: "24 H Volume", value: data.volume)
+        let btcdominance = StatisticModel(title: "Btc Dominance", value: data.btnDominance)
+        let portfolio = StatisticModel(title: "Portfolio value", value: "$0.0",percentageChange: 0.0)
+
+        stats.append(contentsOf:
+                        [marketCap,
+                        volume,
+                        btcdominance,
+                         portfolio])
+        
+        return stats
     }
 }

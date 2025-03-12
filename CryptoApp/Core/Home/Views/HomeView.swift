@@ -12,12 +12,7 @@ struct HomeView: View {
     @EnvironmentObject private var vm : HomeViewModel
     @State private var showPortfolio  = false
     
-    let statistics : [StatisticModel] = [
-        StatisticModel(title: "title", value: "value", percentageChange: 1),
-        StatisticModel(title: "title", value: "value"),
-        StatisticModel(title: "title", value: "value"),
-        StatisticModel(title: "title", value: "value", percentageChange: -7),
-    ]
+  
     
     var body: some View {
         ZStack{

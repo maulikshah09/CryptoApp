@@ -23,7 +23,8 @@ struct HomeStateView: View {
     }
 }
 
-#Preview {
-    HomeStateView(showPortfolio: .constant(false))
-        .environmentObject(HomeViewModel())
-}
+
+//#Preview {
+//    HomeStateView(showPortfolio: .constant(false))
+//        .environmentObject(HomeViewModel())
+//}
